@@ -1,13 +1,17 @@
 import React from "react";
-import { useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 
-function list({id, todo, isComplited, userId}) {
-  const API = 'https://pre-onboarding-selection-task.shop';
+function list({id, todo, isCompleted, userId}) {
+  const API = 'https://www.pre-onboarding-selection-task.shop';
   const access_token = localStorage.getItem("access_token");
-  const CheckVal = useRef(false);//체크박스 값 확인용
-  
+  const CheckVal = useRef(isCompleted);//체크박스 값 확인용
+  const [beforeUpd, setBeforeUpd] = useState("");
+  const [checkBox, setCheckbox] = useState(isCompleted);
+
+  useEffect(()=> setBeforeUpd(todo), []);
+  useEffect(() => setCheckbox(checkBox), [])
   var DelTodo = { //delete axios header
     headers : {
       Authorization: `Bearer ${access_token}`
@@ -21,7 +25,7 @@ function list({id, todo, isComplited, userId}) {
   };
 
   const Putaxios = (a, b) => {
-    console.log(todo,isComplited)
+    console.log(todo,isCompleted)
     axios.put(`${API}/todos/${id}`,{
         todo: a,
         isCompleted : b  
@@ -43,17 +47,18 @@ function list({id, todo, isComplited, userId}) {
     })
   };
   function delClick(e) { // 삭제 기능 함수
-    const li = document.getElementById(`${id}`)
+    const li = document.getElementById(`${id}`);
     li.remove();
     delaxios();
   }
 
 
   function checkon(e) {
-    const cval = e.target.checked;
-    CheckVal.current = cval;
-  }
-
+    setCheckbox(e.target.checked)
+    const span = document.getElementById(`${id}.sp`);
+    Putaxios( span.innerHTML , e.target.checked);
+  };
+  
   function updClick() { //수정 및 제출, 취소 기능 함수
     const span = document.getElementById(`${id}.sp`);
     const modiBtn = document.getElementById(`${id}.up`);
@@ -69,7 +74,7 @@ function list({id, todo, isComplited, userId}) {
     doneBtn.onclick = function doneupd(){
       const getInput = document.getElementById(`${id}.new`);
       span.innerHTML = getInput.value;
-      console.log(CheckVal.current);
+      setBeforeUpd(span.innerHTML);
       Putaxios(span.innerHTML, CheckVal.current);
       cancelBtn.remove();
       doneBtn.remove();
@@ -82,7 +87,8 @@ function list({id, todo, isComplited, userId}) {
     cancelBtn.setAttribute("data-testid","cancel-button");
     cancelBtn.onclick = function cancelupd() {
       const getInput = document.getElementById(`${id}.new`);
-      console.log(getInput.value)
+      span.innerHTML = beforeUpd;
+      console.log(beforeUpd)
       getInput.remove();
       doneBtn.remove();
       cancelBtn.remove();
@@ -98,13 +104,11 @@ function list({id, todo, isComplited, userId}) {
     getspan.append(doneBtn, cancelBtn);
     }
   
-
-
   return (
     <div>
       <li id={id}>
         <label id ={`${id}.lab`}>
-          <input onClick={checkon} id={`${id}.in`} type={"checkbox"}/>
+          <input onChange={checkon} id={`${id}.in`} type={"checkbox"} checked={checkBox}/>
           <span id={`${id}.sp`}>{todo}</span>
         </label>
           <span id ={`${id}.span`}>

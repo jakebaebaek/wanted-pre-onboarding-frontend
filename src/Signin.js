@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Signin() {
-  const API = 'https://pre-onboarding-selection-task.shop'
+  const API = 'https://www.pre-onboarding-selection-task.shop'
   var config = {
     headers: {     
       'Content-type': 'application/json; charset=utf-8'
@@ -69,7 +69,7 @@ function Signin() {
         </label><br/>
         <button 
           onClick={isDisabled} 
-          data-testid="signup-button"
+          data-testid="signin-button"
           disabled={disable}
         >
           회원가입

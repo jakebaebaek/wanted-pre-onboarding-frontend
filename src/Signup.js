@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Signup() {
-  const API = 'https://pre-onboarding-selection-task.shop'
+  const API = 'https://www.pre-onboarding-selection-task.shop'
   const movePage = useNavigate();
   var config = {
     headers: {     
@@ -46,6 +46,7 @@ function Signup() {
     e.preventDefault();
     const PW_val= document.getElementById('PW').value;
     const Email_val = document.getElementById('Email').value;
+    alert("제출완료")
     axiosPost(Email_val,PW_val);
   }
 
@@ -58,6 +59,7 @@ function Signup() {
       <label htmlFor='Email'> Email </label>
       <input 
         id='Email'
+        data-testid="email-input"
         name="Email" 
         required 
         placeholder="이메일을 입력해주세요."
@@ -65,6 +67,7 @@ function Signup() {
       <label htmlFor='PW'> PW </label>
       <input 
         id='PW'
+        data-testid="password-input"
         name='PW' 
         required 
         placeholder="비밀번호를 입력해주세요." 
@@ -72,6 +75,7 @@ function Signup() {
       /><br/>
       <button 
         id="signBTN"
+        data-testid="signup-button"
         disabled={disable}
         onClick={isDisabled}> 회원 가입 
       </button>

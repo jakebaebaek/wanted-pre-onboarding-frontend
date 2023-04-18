@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import List from './todolist.js'
 
 function Todo() {
-  const API = 'https://pre-onboarding-selection-task.shop'
+  const API = 'https://www.pre-onboarding-selection-task.shop'
   const access_token = localStorage.getItem("access_token");
   const [todoData, setTododata] = useState([]);
   
@@ -24,13 +24,16 @@ function Todo() {
     }
   }
 
-  // axios.get(`${API}/todos`,
-  // todoGet)
-  //   .then((res) => {
-  //       setTododata(res.data);
-  //     }).catch((error) => {
-  //       console.log(error);
-  //     })
+  const firstGet = () => {
+    axios.get(`${API}/todos`,
+    todoGet)
+    .then((res) => {
+        setTododata(res.data);
+      }).catch((error) => {
+        console.log(error);
+      })
+  }
+  useEffect(() => firstGet(), []);
   
 
   const axiosPost = (innerInput) => {
@@ -72,13 +75,13 @@ function Todo() {
         </button>
       </form>
       <div id='allList'>
-        {todoData.map((item) => 
+        {todoData.length < 1 ? undefined : todoData.map((item) => 
         <div>
           <List 
             key={item.id}
             id={item.id} 
             todo={item.todo} 
-            isComplited={item.isComplited} 
+            isCompleted={item.isCompleted} 
             userId={item.userId}
           />
         </div>
